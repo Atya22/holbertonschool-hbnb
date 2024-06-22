@@ -78,3 +78,19 @@ def get_city_by_id(city_id):
     else:
         abort(404, description=f"City with ID '{city_id}' not found")
 
+@app.route('/cities/<city_id>', methods=['PUT'])
+def update_city(city_id):
+    city_data = data_manager.get(city_id, 'City')
+    if not city_data:
+        abort(404, description=f"City with ID '{city_id}' not found")
+
+    data = request.get_json()
+    validate_city_data(data, is_update=True)
+
+    city = City(name=data['name'], population=data['population'], country_code=data['country_code'].upper())
+    city.id = city_id
+    data_manager.update(city)
+
+    return jsonify(city.to_dict()), 200
+
+
