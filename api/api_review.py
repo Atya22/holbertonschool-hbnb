@@ -15,6 +15,14 @@ def validate_review_data(data, is_update=False):
     if not (1 <= data['rating'] <= 5):
         abort(400, description="Rating must be between 1 and 5")
 
+@app.route('/reviews/<string:review_id>', methods=['GET'])
+def get_review(review_id):
+    """Retrieve detailed information about a specific review."""
+    review = data_manager.get(review_id, 'Review')
+    if review is None or review.get('deleted'):
+        abort(404, description=f"Review with ID '{review_id}' not found")
+    return jsonify(review.to_dict()), 200
+
 @app.route('/places/<string:place_id>/reviews', methods=['POST'])
 def create_review(place_id):
     """Create a new review for a specified place."""
