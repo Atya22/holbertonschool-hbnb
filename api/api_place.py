@@ -10,15 +10,14 @@ from datetime import datetime
 app = Flask(__name__)
 data_manager = DataManager()
 
-# Función para encontrar una ciudad por su ID
+# Function to meet a city by your ID
 def find_city(city_id):
     city_data = data_manager.get(city_id, 'City')
     if city_data:
         return City(city_data['name'], city_data['population'], city_data['country_code'])
     return None
 
-# Función para encontrar amenidades por sus IDs
-def find_amenities(amenity_ids):
+# Function to find updates for your ID
     amenities = []
     for amenity_id in amenity_ids:
         amenity_data = data_manager.get(amenity_id, 'Amenities')
@@ -26,17 +25,17 @@ def find_amenities(amenity_ids):
             amenities.append(Amenities(name=amenity_data['name']))
     return amenities
 
-# Función para validar coordenadas
+# Function to validate coordinates
 def validate_coordinates(latitude, longitude):
     if not (-90 <= latitude <= 90 and -180 <= longitude <= 180):
         abort(400, description="Invalid geographical coordinates")
 
-# Función para validar que un valor sea un entero no negativo
+# Function to validate that a value is a non-negative entry
 def validate_non_negative_integer(value, field_name):
     if not isinstance(value, int) or value < 0:
         abort(400, description=f"{field_name} must be a non-negative integer")
 
-# Función para validar el precio
+# Function to validate the price
 def validate_price(price):
     if not isinstance(price, (int, float)) or price < 0:
         abort(400, description="Price per night must be a valid non-negative numerical value")
@@ -83,3 +82,27 @@ def create_place():
     data_manager.save(new_place)
 
     return jsonify(new_place.to_dict()), 201
+@app.route('/places', methods=['GET'])
+def get_places():
+    places = list(data_manager.storage.get('Place', {}).values())
+    return jsonify(places), 200
+
+
+@app.route('/places/<place_id>', methods=['GET'])
+def get_place(place_id):
+    place_data = data_manager.get(place_id, 'Place')
+    if not place_data:
+        abort(404, description="Place not found")
+
+    place = Place(**place_data)
+    detailed_place = add_detailed_info(place.to_dict())
+    return jsonify(detailed_place), 200
+
+@app.route('/places/<place_id>', methods=['PUT'])
+def update_place(place_id):
+    data = request.json
+    place_data = data_manager.get(place_id, 'Place')
+    if not place_data:
+        abort(404, description="Place not found")
+
+    place = Place(**place_data)
