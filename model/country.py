@@ -26,3 +26,7 @@ class Country(Base):
             'name': self.name,
             'states': self.states
         }
+
+    def __str__(self):
+        states_str = ', '.join(self.states)
+        return f"Country(ID: {self.id}, Name: {self.name}, States: [{states_str}])"
