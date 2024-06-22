@@ -27,3 +27,41 @@ class DataManager(IPersistenceManager):
         """
         self.file_path = file_path
         self.storage = self.load_from_file()
+
+    def load_from_file(self):
+        """
+        Loads data from the JSON file if it exists, otherwise returns an empty dictionary.
+        """
+        try:
+            with open(self.file_path, "r") as file:
+                return json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return {}
+
+    def save_to_file(self):
+        """
+        Saves the current storage dictionary to the JSON file
+        """
+        with open(self.file_path, "w") as file:
+            json.dump(self.storage, file, indent=4, default=str)
+
+    def save(self, entity):
+        """
+        Saves a new entity to the storage.
+
+        The entity must have an 'id' field used as a unique identifier. Entities
+        are stored in a nested dictionary structure, organized by their type and ID.
+
+        Args:
+            entity: The entity to be saved. It should be a dictionary-like object with
+                    an 'id' key.
+
+        Example:
+            entity = {'id': '123', 'name': 'Alice'}
+            data_manager.save(entity)
+        """
+        entity_type = type(entity).__name__
+        if entity_type not in self.storage:
+            self.storage[entity_type] = {}
+        self.storage[entity_type][entity.id] = entity.to_dict()
+        self.save_to_file()
