@@ -60,4 +60,14 @@ class Host(User):
 
     def remove_amenities(self, amenities):
         self.amenities.remove(amenities)
+class Guest(User):
 
+    def __init__(self, first_name, last_name, email, password):
+        super().__init__(first_name, last_name, email, password)
+        self.comment = []
+
+    def add_review(self, comment):
+        self.comment.append(comment)
+
+    def remove_review(self, comment):
+        self.comment.remove(comment)
