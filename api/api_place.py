@@ -106,3 +106,34 @@ def update_place(place_id):
         abort(404, description="Place not found")
 
     place = Place(**place_data)
+    # Validation of entry data
+     if 'latitude' in data or 'longitude' in data:
+        validate_coordinates(data.get('latitude', place.latitude), data.get('longitude', place.longitude))
+    if 'number_of_rooms' in data:
+        validate_non_negative_integer(data.get('number_of_rooms'), 'number_of_rooms')
+    if 'number_of_bathrooms' in data:
+        validate_non_negative_integer(data.get('number_of_bathrooms'), 'number_of_bathrooms')
+    if 'max_guests' in data:
+        validate_non_negative_integer(data.get('max_guests'), 'max_guests')
+    if 'price_per_night' in data:
+        validate_price(data.get('price_per_night'))
+    if 'city_id' in data:
+        validate_city_id(data.get('city_id'))
+    if 'amenity_ids' in data:
+        validate_amenity_ids(data.get('amenity_ids', []))
+
+    place.name = data.get('name', place.name)
+    place.description = data.get('description', place.description)
+    place.address = data.get('address', place.address)
+    place.city = find_city(data.get('city_id')) if data.get('city_id') else place.city
+    place.latitude = data.get('latitude', place.latitude)
+    place.longitude = data.get('longitude', place.longitude)
+    place.number_of_rooms = data.get('number_of_rooms', place.number_of_rooms)
+    place.number_of_bathrooms = data.get('number_of_bathrooms', place.number_of_bathrooms)
+    place.price_per_night = data.get('price_per_night', place.price_per_night)
+    place.max_guests = data.get('max_guests', place.max_guests)
+    place.amenities = find_amenities(data.get('amenity_ids', [])) if 'amenity_ids' in data else place.amenities
+
+    data_manager.update(place)
+
+    return jsonify(place.to_dict()), 200
