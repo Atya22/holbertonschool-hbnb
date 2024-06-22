@@ -153,3 +153,6 @@ def add_detailed_info(place):
     place["amenities"] = [data_manager.get(amenity["id"], "Amenities").to_dict() for amenity in place.get("amenities", [])]
     place["host"] = data_manager.get(place["host_id"], "User").to_dict() if place.get("host_id") else None
     return place
+
+if __name__ == '__main__':
+    app.run(debug=True)
