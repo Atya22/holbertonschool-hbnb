@@ -24,5 +24,8 @@ class Review(Base):
                 setattr(self, key, value)
             self.update_time = datetime.now()
 
-            def _str_(self):
-                return f"Review({self.id}, {self.user}, {self.place}, {self.rating})"
+        def delete(self):
+            self.deleted = True
+
+        def _str_(self):
+            return f"Review({self.id}, {self.user}, {self.place}, {self.rating})"
