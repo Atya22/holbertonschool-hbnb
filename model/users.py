@@ -42,3 +42,22 @@ class User(Base):
         return f"User(Id: {self.id}, name: {self.first_name},\
  email: {self.email})"
 
+class Host(User):
+
+    def __init__(self, first_name, last_name, email, password):
+        super().__init__(first_name, last_name, email, password)
+        self.name_place = []
+        self.amenities = []
+
+    def add_place(self, place):
+        self.name_place.append(place)
+
+    def remove_place(self, place):
+        self.name_place.remove(place)
+
+    def add_amenities(self, amenities):
+        self.amenities.append(amenities)
+
+    def remove_amenities(self, amenities):
+        self.amenities.remove(amenities)
+
