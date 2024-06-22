@@ -43,3 +43,14 @@ class Place(Base):
             'created_at': self.create_time.isoformat(),
             'updated_at': self.update_time.isoformat()
         }
+
+     def add_amenity(self, amenity):
+        if amenity not in self.amenities:
+            self.amenities.append(amenity)
+
+    def remove_amenity(self, amenity):
+        if amenity in self.amenities:
+            self.amenities.remove(amenity)
+
+    def __str__(self):
+        return f"Place({self.id}, {self.name}, {self.city}, {self.host})"
