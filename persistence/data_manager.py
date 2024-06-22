@@ -114,3 +114,18 @@ class DataManager(IPersistenceManager):
         if entity_type in self.storage and entity.id in self.storage[entity_type]:
             self.storage[entity_type][entity.id] = entity.to_dict()
             self.save_to_file()
+
+    def delete(self, entity_id, entity_type):
+        """
+        Deletes an entity from the storage by its ID and type.
+
+        Args:
+            entity_id: The unique identifier of the entity.
+            entity_type: The type of the entity to delete.
+
+        Example:
+            data_manager.delete('123', 'dict')
+        """
+        if entity_type in self.storage:
+            self.storage[entity_type].pop(entity_id, None)
+            self.save_to_file()
