@@ -41,3 +41,18 @@ def get_countries():
         } for country in pycountry.countries
     ]
     return jsonify(countries), 200
+
+@app.route('/countries/<country_code>', methods=['GET'])
+def get_country_by_code(country_code):
+    country = find_country_by_code(country_code)
+    if country:
+        return jsonify(country), 200
+    else:
+        abort(404, description=f"Country with code '{country_code}' not found")
+
+@app.route('/countries/<country_code>/cities', methods=['GET'])
+def get_cities_by_country(country_code):
+    if not find_country_by_code(country_code):
+        abort(404, description=f"Country with code '{country_code}' not found")
+    country_cities = [city for city in data_manager.get_all() if city.get('country_code') and city['country_code'].upper() == country_code.upper()]
+    return jsonify(country_cities), 200
