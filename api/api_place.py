@@ -87,7 +87,7 @@ def get_places():
     places = list(data_manager.storage.get('Place', {}).values())
     return jsonify(places), 200
 
-
+# Route to get a place by your ID
 @app.route('/places/<place_id>', methods=['GET'])
 def get_place(place_id):
     place_data = data_manager.get(place_id, 'Place')
