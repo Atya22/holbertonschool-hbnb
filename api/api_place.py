@@ -25,3 +25,18 @@ def find_amenities(amenity_ids):
         if amenity_data:
             amenities.append(Amenities(name=amenity_data['name']))
     return amenities
+
+# Función para validar coordenadas
+def validate_coordinates(latitude, longitude):
+    if not (-90 <= latitude <= 90 and -180 <= longitude <= 180):
+        abort(400, description="Invalid geographical coordinates")
+
+# Función para validar que un valor sea un entero no negativo
+def validate_non_negative_integer(value, field_name):
+    if not isinstance(value, int) or value < 0:
+        abort(400, description=f"{field_name} must be a non-negative integer")
+
+# Función para validar el precio
+def validate_price(price):
+    if not isinstance(price, (int, float)) or price < 0:
+        abort(400, description="Price per night must be a valid non-negative numerical value")
