@@ -26,6 +26,23 @@ def create_review(place_id):
     data_manager.save(review)
     return jsonify(review.to_dict()), 201
 
+@app.route('/reviews/<string:review_id>', methods=['PUT'])
+def update_review(review_id):
+    """Update an existing review."""
+    review_data = data_manager.get(review_id, 'Review')
+    if review_data is None or review_data.get('deleted'):
+        abort(404, description=f"Review with ID '{review_id}' not found")
+
+    data = request.get_json()
+    validate_review_data(data, is_update=True)
+
+    review = Review.from_dict(review_data)
+    review.update(**data)
+
+    data_manager.update(review)
+
+    return jsonify(review.to_dict()), 200
+
 @app.route('/reviews/<string:review_id>', methods=['DELETE'])
 def delete_review(review_id):
     """Delete a specific review."""
