@@ -56,3 +56,25 @@ def get_cities_by_country(country_code):
         abort(404, description=f"Country with code '{country_code}' not found")
     country_cities = [city for city in data_manager.get_all() if city.get('country_code') and city['country_code'].upper() == country_code.upper()]
     return jsonify(country_cities), 200
+
+@app.route('/cities', methods=['POST'])
+def add_city():
+    data = request.get_json()
+    validate_city_data(data)
+    city = City(name=data["name"], population=data["population"], country_code=data["country_code"].upper())
+    data_manager.save(city)
+    return jsonify(city.to_dict()), 201
+
+@app.route('/cities', methods=['GET'])
+def get_all_cities():
+    cities = list(data_manager.storage.get('City', {}).values())
+    return jsonify(cities), 200
+
+@app.route('/cities/<city_id>', methods=['GET'])
+def get_city_by_id(city_id):
+    city = data_manager.get(city_id, 'City')
+    if city:
+        return jsonify(city), 200
+    else:
+        abort(404, description=f"City with ID '{city_id}' not found")
+
