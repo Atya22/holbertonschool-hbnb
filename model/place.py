@@ -52,5 +52,11 @@ class Place(Base):
         if amenity in self.amenities:
             self.amenities.remove(amenity)
 
+    def update(self, **kwargs):
+        for key, value in kwargs.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
+        self.update_time = datetime.now()
+
     def __str__(self):
         return f"Place({self.id}, {self.name}, {self.city}, {self.host})"
