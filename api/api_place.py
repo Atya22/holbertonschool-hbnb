@@ -137,3 +137,19 @@ def update_place(place_id):
     data_manager.update(place)
 
     return jsonify(place.to_dict()), 200
+
+@app.route('/places/<place_id>', methods=['DELETE'])
+def delete_place(place_id):
+    place_data = data_manager.get(place_id, 'Place')
+    if not place_data:
+        abort(404, description="Place not found")
+
+    data_manager.delete(place_id, 'Place')
+
+    return jsonify({"message": "Place deleted successfully"}), 204
+
+def add_detailed_info(place):
+    place["city"] = data_manager.get(place["city"]["id"], "City").to_dict() if place.get("city") else None
+    place["amenities"] = [data_manager.get(amenity["id"], "Amenities").to_dict() for amenity in place.get("amenities", [])]
+    place["host"] = data_manager.get(place["host_id"], "User").to_dict() if place.get("host_id") else None
+    return place
