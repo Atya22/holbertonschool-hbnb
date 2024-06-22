@@ -31,6 +31,21 @@ class FlaskAppTests(unittest.TestCase):
         self.assertIn('id', data)
         self.assertEqual(data['first_name'], 'John')
         self.assertEqual(data['email'], 'john.doe@example.com')
+        
+    def test_create_user_invalid_email(self):
+        user_data = {
+            'first_name': 'John',
+            'last_name': 'Doe',
+            'email': 'invalid-email',
+            'password': 'securepassword'
+        }
+        response = self.app.post('/users', data=json.dumps(user_data), content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+        try:
+            data = json.loads(response.data)
+            self.assertIn('error', data)
+        except json.JSONDecodeError:
+            self.fail("Invalid JSON response.")
 
     def test_create_user_existing_email(self):
         user_data = {
@@ -46,7 +61,7 @@ class FlaskAppTests(unittest.TestCase):
             data = json.loads(response.data)
             self.assertIn('error', data)
         except json.JSONDecodeError:
-            self.fail("La respuesta no es un JSON válido.")
+            self.fail("Invalid JSON response")
 
     def test_get_users(self):
         user_data_1 = {
@@ -69,7 +84,7 @@ class FlaskAppTests(unittest.TestCase):
             data = json.loads(response.data)
             self.assertEqual(len(data), 2)
         except json.JSONDecodeError:
-            self.fail("La respuesta no es un JSON válido.")
+            self.fail("Invalid JSON response")
 
     def test_get_user(self):
         user_data = {
@@ -86,7 +101,7 @@ class FlaskAppTests(unittest.TestCase):
             data = json.loads(response.data)
             self.assertEqual(data['id'], user_id)
         except json.JSONDecodeError:
-            self.fail("La respuesta no es un JSON válido.")
+            self.fail("Invalid JSON response")
 
     def test_update_user(self):
         user_data = {
@@ -110,7 +125,32 @@ class FlaskAppTests(unittest.TestCase):
             self.assertEqual(data['last_name'], 'Smith')
             self.assertEqual(data['email'], 'john.smith@example.com')
         except json.JSONDecodeError:
-            self.fail("La respuesta no es un JSON válido.")
+            self.fail("Invalid JSON response")
+
+    def test_delete_user(self):
+        user_data = {
+            'first_name': 'John',
+            'last_name': 'Doe',
+            'email': 'john.doe@example.com',
+            'password': 'securepassword'
+        }
+        create_response = self.app.post('/users', data=json.dumps(user_data), content_type='application/json')
+        user_id = json.loads(create_response.data)['id']
+        response = self.app.delete(f'/users/{user_id}')
+        self.assertEqual(response.status_code, 204)
+        get_response = self.app.get(f'/users/{user_id}')
+        self.assertEqual(get_response.status_code, 404)
+
+    def test_invalid_uuid(self):
+        invalid_user_id = 'invalid-uuid'
+        response = self.app.get(f'/users/{invalid_user_id}')
+        self.assertEqual(response.status_code, 400)
+        try:
+            data = json.loads(response.data)
+            self.assertIn('error', data)
+            self.assertEqual(data['error'], 'Invalid user ID')
+        except json.JSONDecodeError:
+            self.fail("Invalid JSON response")
 
 
 if __name__ == '__main__':
