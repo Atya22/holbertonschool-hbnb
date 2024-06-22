@@ -94,3 +94,23 @@ class DataManager(IPersistenceManager):
             entity = data_manager.get('123', 'dict')
         """
         return self.storage.get(entity_type, {}).get(entity_id, None)
+
+    def update(self, entity):
+        """
+        Updates an existing entity in the storage.
+
+        The entity must have an 'id' field used as a unique identifier. If the
+        entity exists in the storage, it will be updated with the new data.
+
+        Args:
+            entity: The entity with updated data. It should be a dictionary-like object
+                    with an 'id' key.
+
+        Example:
+            updated_entity = {'id': '123', 'name': 'Alice', 'age': 30}
+            data_manager.update(updated_entity)
+        """
+        entity_type = type(entity).__name__
+        if entity_type in self.storage and entity.id in self.storage[entity_type]:
+            self.storage[entity_type][entity.id] = entity.to_dict()
+            self.save_to_file()
