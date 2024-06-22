@@ -58,5 +58,8 @@ class Place(Base):
                 setattr(self, key, value)
         self.update_time = datetime.now()
 
+    def delete(self):
+            def self
+
     def __str__(self):
         return f"Place({self.id}, {self.name}, {self.city}, {self.host})"
