@@ -93,4 +93,14 @@ def update_city(city_id):
 
     return jsonify(city.to_dict()), 200
 
+@app.route('/cities/<city_id>', methods=['DELETE'])
+def delete_city(city_id):
+    city = data_manager.get(city_id, 'City')
+    if not city:
+        abort(404, description=f"City with ID '{city_id}' not found")
+    data_manager.delete(city_id, 'City')
+    return '', 204
 
+
+if __name__ == '__main__':
+    app.run(debug=True)
