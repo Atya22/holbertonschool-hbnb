@@ -65,3 +65,32 @@ class DataManager(IPersistenceManager):
             self.storage[entity_type] = {}
         self.storage[entity_type][entity.id] = entity.to_dict()
         self.save_to_file()
+
+    def get_all(self, entity_type=None):
+        """
+        get s list of all users
+        """
+        if entity_type:
+            return [entity for entity_type_key, entities in self.storage.items()
+                if entity_type_key == entity_type
+                for entity in entities.values()]
+
+        else:
+            return [entity for entities in self.storage.values()
+                    for entity in entities.values()]
+
+    def get(self, entity_id, entity_type):
+        """
+        Retrieves an entity from the storage by its ID and type.
+
+        Args:
+            entity_id: The unique identifier of the entity.
+            entity_type: The type of the entity to retrieve.
+
+        Returns:
+            The entity if found, or None if not found.
+
+        Example:
+            entity = data_manager.get('123', 'dict')
+        """
+        return self.storage.get(entity_type, {}).get(entity_id, None)
