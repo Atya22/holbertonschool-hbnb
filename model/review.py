@@ -15,3 +15,17 @@ class Review(Base):
         self.deleted = False
         if not (1 <= rating <= 5):
             raise ValueError("Rating must be between 1 and 5")
+
+        def update(self, **kwargs):
+            if self.deleted:
+                raise ValueError("Cannot update a deleted review.")
+            for key, value in kwargs.items():
+                if hasattr(self, key):
+                setattr(self, key, value)
+            self.update_time = datetime.now()
+
+        def delete(self):
+            self.deleted = True
+
+        def _str_(self):
+            return f"Review({self.id}, {self.user}, {self.place}, {self.rating})"
