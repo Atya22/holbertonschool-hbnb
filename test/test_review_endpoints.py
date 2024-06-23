@@ -2,6 +2,7 @@
 import unittest
 from app import app
 from persistence.data_manager import DataManager
+from model.review import Review
 
 class ReviewAPITestCase(unittest.TestCase):
     def setUp(self):
