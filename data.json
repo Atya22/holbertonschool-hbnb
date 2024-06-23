@@ -1,0 +1,95 @@
+{
+    "User": {
+        "727b993d-c17d-4b8c-b7b1-f026bf906fc3": {
+            "id": "727b993d-c17d-4b8c-b7b1-f026bf906fc3",
+            "first_name": "Nicolas",
+            "last_name": "Rondon",
+            "email": "nicolas12@gmail.com",
+            "password": "newpassword",
+            "create_time": "2024-06-18T19:12:23.174080",
+            "update_time": "2024-06-18T19:12:23.174085"
+        },
+        "8716a20b-486b-46e2-975d-4650ae91f67b": {
+            "id": "8716a20b-486b-46e2-975d-4650ae91f67b",
+            "first_name": "JuanMa",
+            "last_name": "Zuluaga",
+            "email": "Est382@gmail.com",
+            "password": "Estrella90",
+            "create_time": "2024-06-19T00:17:31.267955",
+            "update_time": "2024-06-19T00:17:31.267959"
+        },
+        "91cda5c5-7d5d-4261-94c1-080e435855c3": {
+            "id": "91cda5c5-7d5d-4261-94c1-080e435855c3",
+            "first_name": "Pato",
+            "last_name": "Donald",
+            "email": "Lucas@gmail.com",
+            "password": "34524kl",
+            "create_time": "2024-06-19T11:00:19.310247",
+            "update_time": "2024-06-19T11:00:19.310263"
+        }
+    },
+    "City": {
+        "486d01a9-916e-479e-8408-ea80e143d4db": {
+            "id": "486d01a9-916e-479e-8408-ea80e143d4db",
+            "name": "New York",
+            "population": 1200000,
+            "country_code": "US",
+            "created_at": "2024-06-19 01:13:10.191537",
+            "updated_at": "2024-06-19 01:13:10.191537"
+        },
+        "44275435-3733-429e-9c33-5466f50ed62d": {
+            "id": "44275435-3733-429e-9c33-5466f50ed62d",
+            "name": "Detroit",
+            "population": 500000,
+            "country_code": "US",
+            "created_at": "2024-06-19T00:05:25.328923",
+            "updated_at": "2024-06-19T00:05:25.328931"
+        }
+    },
+    "Amenities": {
+        "bf4b5a70-64b8-4d36-b616-b23d5630a172": {
+            "id": "bf4b5a70-64b8-4d36-b616-b23d5630a172",
+            "name": "wifi"
+        },
+        "001c77e8-9e65-432a-a5a2-ad0cc0d37381": {
+            "id": "001c77e8-9e65-432a-a5a2-ad0cc0d37381",
+            "name": "Kitchen"
+        },
+        "3b051675-c320-409e-b54d-c9e8aacbc89e": {
+            "id": "3b051675-c320-409e-b54d-c9e8aacbc89e",
+            "name": "Washing machine"
+        }
+    },
+    "Place": {
+        "fe847fe7-7329-48c9-aa05-a07186e597f6": {
+            "id": "fe847fe7-7329-48c9-aa05-a07186e597f6",
+            "name": "Beach House",
+            "description": "A beautiful beach house with ocean view",
+            "address": "123 Beach Street",
+            "city": "City: New York, Population: 1200000, Country Code: US, Last Updated: 2024-06-19 02:53:33.335421",
+            "latitude": 40.712776,
+            "longitude": -74.005974,
+            "number_of_rooms": 3,
+            "number_of_bathrooms": 2,
+            "price_per_night": 150.0,
+            "max_guests": 4,
+            "amenities": [
+                {
+                    "id": "7c8be1ec-b717-4210-906b-be32a0534ff9",
+                    "name": "wifi"
+                },
+                {
+                    "id": "92888210-6a33-4aac-a2f8-6acddd5639a5",
+                    "name": "Kitchen"
+                },
+                {
+                    "id": "37728579-e09a-453c-9ae5-7eb74e64bb78",
+                    "name": "Washing machine"
+                }
+            ],
+            "host": "727b993d-c17d-4b8c-b7b1-f026bf906fc3",
+            "created_at": "2024-06-19T02:53:33.335571",
+            "updated_at": "2024-06-19T02:53:33.335573"
+        }
+    }
+}
