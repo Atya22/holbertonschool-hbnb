@@ -13,6 +13,11 @@ class TestDataManager(unittest.TestCase):
         self.dm = DataManager()
         self.user = User("Luis", "Dom", "luis12@gmai.com", "124")
 
+    def test_save(self):
+        """Test saving an entity"""
+        self.dm.save(self.user)
+        self.assertEqual(self.dm.get(self.user.id, 'User'), self.user.to_dict())
+
     def test_get(self):
         """Test retrieving an entity"""
         self.dm.save(self.user)
