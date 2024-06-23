@@ -39,6 +39,12 @@ class TestState(unittest.TestCase):
         self.assertEqual(self.state.name, "Updated State")
         self.assertEqual(self.state.country, "Updated Country")
 
+    def test_update_timestamp(self):
+        """Test that the update_time timestamp is updated on attribute update."""
+        previous_update_time = self.state.update_time
+        self.state.update(name="Another Update")
+        self.assertNotEqual(self.state.update_time, previous_update_time)
+
     def test_empty_name(self):
         """Test that an empty name raises a ValueError."""
         with self.assertRaises(ValueError):
