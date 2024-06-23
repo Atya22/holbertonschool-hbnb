@@ -38,3 +38,16 @@ class TestState(unittest.TestCase):
         self.state.update(name="Updated State", country="Updated Country")
         self.assertEqual(self.state.name, "Updated State")
         self.assertEqual(self.state.country, "Updated Country")
+
+    def test_empty_name(self):
+        """Test that an empty name raises a ValueError."""
+        with self.assertRaises(ValueError):
+            State(name="", country="Test Country")
+
+    def test_empty_country(self):
+        """Test that an empty country raises a ValueError."""
+        with self.assertRaises(ValueError):
+            State(name="Test State", country="")
+
+    if __name__ == "__main__":
+        unittest.main()
