@@ -48,3 +48,23 @@ class FlaskTestCase(unittest.TestCase):
         self.app.post('/cities', data=json.dumps(city_data), content_type='application/json')
         response = self.app.post('/cities', data=json.dumps(city_data), content_type='application/json')
         self.assertEqual(response.status_code, 409)
+
+    def test_get_city_by_id(self):
+        city = City(name="Test City", population=100000, country_code="US")
+        data_manager.save(city)
+
+        response = self.app.get(f'/cities/{city.id}')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data)
+        self.assertEqual(data['name'], 'Test City')
+
+    def test_delete_city(self):
+        city = City(name="Test City", population=100000, country_code="US")
+        data_manager.save(city)
+
+        response = self.app.delete(f'/cities/{city.id}')
+        self.assertEqual(response.status_code, 204)
+        self.assertIsNone(data_manager.get(city.id, 'City'))
+
+if __name__ == '__main__':
+    unittest.main()
