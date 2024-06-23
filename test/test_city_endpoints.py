@@ -23,6 +23,10 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
         self.assertEqual(data['iso_3166_1_alpha_2'], 'US')
+    
+    def test_get_country_by_code_not_found(self):
+        response = self.app.get('/countries/XX')
+        self.assertEqual(response.status_code, 404)
 
     def test_add_city(self):
         city_data = {
