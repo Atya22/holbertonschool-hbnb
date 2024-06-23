@@ -44,7 +44,7 @@ class Place(Base):
             'updated_at': self.update_time.isoformat()
         }
 
-     def add_amenity(self, amenity):
+    def add_amenity(self, amenity):
         if amenity not in self.amenities:
             self.amenities.append(amenity)
 
@@ -59,7 +59,7 @@ class Place(Base):
         self.update_time = datetime.now()
 
     def delete(self):
-            def self
+        del self
 
     def __str__(self):
         return f"Place({self.id}, {self.name}, {self.city}, {self.host})"

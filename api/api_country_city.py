@@ -1,11 +1,11 @@
 #!/usr/bin/python3
-from flask import Flask, jsonify, request, abort
+from flask import Blueprint, jsonify, request, abort
 from model.city import City
 import uuid
 import pycountry
 from persistence.data_manager import DataManager
 
-app = Flask(__name__)
+api_country_city = Blueprint('api_country_city', __name__)
 data_manager = DataManager()
 
 
@@ -32,7 +32,7 @@ def validate_city_data(data, is_update=False):
             abort(409, description=f"City '{data['name']}' already exists in country '{data['country_code']}'")
 
 
-@app.route('/countries', methods=['GET'])
+@api_country_city.route('/countries', methods=['GET'])
 def get_countries():
     countries = [
         {
@@ -42,7 +42,7 @@ def get_countries():
     ]
     return jsonify(countries), 200
 
-@app.route('/countries/<country_code>', methods=['GET'])
+@api_country_city.route('/countries/<country_code>', methods=['GET'])
 def get_country_by_code(country_code):
     country = find_country_by_code(country_code)
     if country:
@@ -50,14 +50,14 @@ def get_country_by_code(country_code):
     else:
         abort(404, description=f"Country with code '{country_code}' not found")
 
-@app.route('/countries/<country_code>/cities', methods=['GET'])
+@api_country_city.route('/countries/<country_code>/cities', methods=['GET'])
 def get_cities_by_country(country_code):
     if not find_country_by_code(country_code):
         abort(404, description=f"Country with code '{country_code}' not found")
     country_cities = [city for city in data_manager.get_all() if city.get('country_code') and city['country_code'].upper() == country_code.upper()]
     return jsonify(country_cities), 200
 
-@app.route('/cities', methods=['POST'])
+@api_country_city.route('/cities', methods=['POST'])
 def add_city():
     data = request.get_json()
     validate_city_data(data)
@@ -65,12 +65,12 @@ def add_city():
     data_manager.save(city)
     return jsonify(city.to_dict()), 201
 
-@app.route('/cities', methods=['GET'])
+@api_country_city.route('/cities', methods=['GET'])
 def get_all_cities():
     cities = list(data_manager.storage.get('City', {}).values())
     return jsonify(cities), 200
 
-@app.route('/cities/<city_id>', methods=['GET'])
+@api_country_city.route('/cities/<city_id>', methods=['GET'])
 def get_city_by_id(city_id):
     city = data_manager.get(city_id, 'City')
     if city:
@@ -78,7 +78,7 @@ def get_city_by_id(city_id):
     else:
         abort(404, description=f"City with ID '{city_id}' not found")
 
-@app.route('/cities/<city_id>', methods=['PUT'])
+@api_country_city.route('/cities/<city_id>', methods=['PUT'])
 def update_city(city_id):
     city_data = data_manager.get(city_id, 'City')
     if not city_data:
@@ -93,14 +93,10 @@ def update_city(city_id):
 
     return jsonify(city.to_dict()), 200
 
-@app.route('/cities/<city_id>', methods=['DELETE'])
+@api_country_city.route('/cities/<city_id>', methods=['DELETE'])
 def delete_city(city_id):
     city = data_manager.get(city_id, 'City')
     if not city:
         abort(404, description=f"City with ID '{city_id}' not found")
     data_manager.delete(city_id, 'City')
     return '', 204
-
-
-if __name__ == '__main__':
-    app.run(debug=True)

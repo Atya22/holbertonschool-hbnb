@@ -1,11 +1,11 @@
 #!/usr/bin/python3
-from flask import Flask, jsonify, request
+from flask import Blueprint, jsonify, request
 from model.users import User
 from persistence.data_manager import DataManager
 import re
 from uuid import UUID
 
-app = Flask(__name__)
+api_user = Blueprint('api_user', __name__)
 data_manager = DataManager()
 
 
@@ -36,7 +36,7 @@ def is_valid_uuid(val):
         return False
 
 
-@app.route("/users", methods=["POST"])
+@api_user.route("/users", methods=["POST"])
 def create_user():
     data = request.get_json()
     valid, message = validate_user_data(data)
@@ -60,13 +60,13 @@ def create_user():
     return jsonify(user.to_dict()), 201
 
 
-@app.route("/users", methods=["GET"])
+@api_user.route("/users", methods=["GET"])
 def get_users():
     users = list(data_manager.storage.get("User", {}).values())
     return jsonify(users), 200
 
 
-@app.route("/users/<user_id>", methods=["GET"])
+@api_user.route("/users/<user_id>", methods=["GET"])
 def get_user(user_id):
     if not is_valid_uuid(user_id):
         return jsonify({"error": "Invalid user ID"}), 400
@@ -76,7 +76,7 @@ def get_user(user_id):
     return jsonify(user), 200
 
 
-@app.route("/users/<user_id>", methods=["PUT"])
+@api_user.route("/users/<user_id>", methods=["PUT"])
 def update_user(user_id):
     data = request.get_json()
 
@@ -111,7 +111,7 @@ def update_user(user_id):
     return jsonify(updated_user.to_dict()), 200
 
 
-@app.route("/users/<user_id>", methods=["DELETE"])
+@api_user.route("/users/<user_id>", methods=["DELETE"])
 def delete_user(user_id):
     if not is_valid_uuid(user_id):
         return jsonify({"error": "Invalid user ID"}), 400
@@ -122,7 +122,3 @@ def delete_user(user_id):
 
     data_manager.delete(user_id, "User")
     return jsonify({}), 204
-
-
-if __name__ == "__main__":
-    app.run(debug=True)

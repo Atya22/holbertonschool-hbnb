@@ -21,7 +21,7 @@ class Review(Base):
                 raise ValueError("Cannot update a deleted review.")
             for key, value in kwargs.items():
                 if hasattr(self, key):
-                setattr(self, key, value)
+                 setattr(self, key, value)
             self.update_time = datetime.now()
 
         def delete(self):

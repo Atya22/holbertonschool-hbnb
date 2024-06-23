@@ -1,10 +1,10 @@
 #!/usr/bin/python3
-from flask import Flask, jsonify, request, abort
+from flask import Blueprint, jsonify, request, abort
 from model.review import Review
 from persistence.data_manager import DataManager
 import uuid
 
-app = Flask(__name__)
+api_review = Blueprint('api_review', __name__)
 data_manager = DataManager()
 
 def validate_review_data(data, is_update=False):
@@ -15,7 +15,7 @@ def validate_review_data(data, is_update=False):
     if not (1 <= data['rating'] <= 5):
         abort(400, description="Rating must be between 1 and 5")
 
-@app.route('/places/<string:place_id>/reviews', methods=['POST'])
+@api_review.route('/places/<string:place_id>/reviews', methods=['POST'])
 def create_review(place_id):
     """Create a new review for a specified place."""
     data = request.get_json()
@@ -26,7 +26,7 @@ def create_review(place_id):
     data_manager.save(review)
     return jsonify(review.to_dict()), 201
 
-@app.route('/reviews/<string:review_id>', methods=['GET'])
+@api_review.route('/reviews/<string:review_id>', methods=['GET'])
 def get_review(review_id):
     """Retrieve detailed information about a specific review."""
     review = data_manager.get(review_id, 'Review')
@@ -34,7 +34,7 @@ def get_review(review_id):
         abort(404, description=f"Review with ID '{review_id}' not found")
     return jsonify(review.to_dict()), 200
 
-@app.route('/reviews/<string:review_id>', methods=['PUT'])
+@api_review.route('/reviews/<string:review_id>', methods=['PUT'])
 def update_review(review_id):
     """Update an existing review."""
     review_data = data_manager.get(review_id, 'Review')
@@ -51,7 +51,7 @@ def update_review(review_id):
 
     return jsonify(review.to_dict()), 200
 
-@app.route('/reviews/<string:review_id>', methods=['DELETE'])
+@api_review.route('/reviews/<string:review_id>', methods=['DELETE'])
 def delete_review(review_id):
     """Delete a specific review."""
     review_data = data_manager.get(review_id, 'Review')
@@ -63,6 +63,3 @@ def delete_review(review_id):
     data_manager.update(review)
 
     return '', 204
-
-if __name__ == '__main__':
-    app.run(debug=True)

@@ -1,5 +1,5 @@
 #!usr/bin/python3
-from flask import Flask, jsonify, request, abort
+from flask import Blueprint, jsonify, request, abort
 from model.place import Place
 from model.city import City
 from model.amenities import Amenities
@@ -7,7 +7,7 @@ from model.users import User  # Asegúrate de tener la clase User importada
 from persistence.data_manager import DataManager
 from datetime import datetime
 
-app = Flask(__name__)
+api_place = Blueprint('api_place', __name__)
 data_manager = DataManager()
 
 # Function to meet a city by your ID
@@ -49,7 +49,7 @@ def validate_amenity_ids(amenity_ids):
         if not data_manager.get(amenity_id, 'Amenities'):
             abort(400, description=f"Invalid amenity_id {amenity_id}, amenity does not exist")
 
-@app.route('/places', methods=['POST'])
+@api_place.route('/places', methods=['POST'])
 def create_place():
     data = request.get_json()
     if not data:
@@ -82,13 +82,13 @@ def create_place():
     data_manager.save(new_place)
 
     return jsonify(new_place.to_dict()), 201
-@app.route('/places', methods=['GET'])
+@api_place.route('/places', methods=['GET'])
 def get_places():
     places = list(data_manager.storage.get('Place', {}).values())
     return jsonify(places), 200
 
 # Route to get a place by your ID
-@app.route('/places/<place_id>', methods=['GET'])
+@api_place.route('/places/<place_id>', methods=['GET'])
 def get_place(place_id):
     place_data = data_manager.get(place_id, 'Place')
     if not place_data:
@@ -98,7 +98,7 @@ def get_place(place_id):
     detailed_place = add_detailed_info(place.to_dict())
     return jsonify(detailed_place), 200
 
-@app.route('/places/<place_id>', methods=['PUT'])
+@api_place.route('/places/<place_id>', methods=['PUT'])
 def update_place(place_id):
     data = request.json
     place_data = data_manager.get(place_id, 'Place')
@@ -107,7 +107,7 @@ def update_place(place_id):
 
     place = Place(**place_data)
     # Validation of entry data
-     if 'latitude' in data or 'longitude' in data:
+    if 'latitude' in data or 'longitude' in data:
         validate_coordinates(data.get('latitude', place.latitude), data.get('longitude', place.longitude))
     if 'number_of_rooms' in data:
         validate_non_negative_integer(data.get('number_of_rooms'), 'number_of_rooms')
@@ -138,7 +138,7 @@ def update_place(place_id):
 
     return jsonify(place.to_dict()), 200
 
-@app.route('/places/<place_id>', methods=['DELETE'])
+@api_place.route('/places/<place_id>', methods=['DELETE'])
 def delete_place(place_id):
     place_data = data_manager.get(place_id, 'Place')
     if not place_data:
@@ -153,6 +153,3 @@ def add_detailed_info(place):
     place["amenities"] = [data_manager.get(amenity["id"], "Amenities").to_dict() for amenity in place.get("amenities", [])]
     place["host"] = data_manager.get(place["host_id"], "User").to_dict() if place.get("host_id") else None
     return place
-
-if __name__ == '__main__':
-    app.run(debug=True)
