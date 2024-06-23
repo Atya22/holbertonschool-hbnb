@@ -29,3 +29,12 @@ class TestCity(unittest.TestCase):
         self.city.add_place("Brooklyn")
         self.assertIn("Brooklyn", self.city.place)
         self.assertNotEqual(self.city.update_time, initial_update_time)
+
+    def test_str_method(self):
+        str_output = str(self.city)
+        self.assertIn("City: New York", str_output)
+        self.assertIn("State: New York", str_output)
+        self.assertIn("Place(s): Manhattan", str_output)
+
+if __name__ == '__main__':
+    unittest.main()
