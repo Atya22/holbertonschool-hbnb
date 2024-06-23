@@ -112,3 +112,5 @@ python3 -m unittest discover tests
 
 ## Authors :black_nib:
 * **Fidan Huseynova** <[fidanhuseynova04](https://github.com/fidanhuseynova04)>
+* **Aytac Allahverdiyeva** <[Atya22](https://github.com/Atya22)>
+* **Gulane Mehralizade** <[Mehralizade](https://github.com/Mehralizade)>
