@@ -45,6 +45,10 @@ class TestState(unittest.TestCase):
         self.state.update(name="Another Update")
         self.assertNotEqual(self.state.update_time, previous_update_time)
 
+    def test_state_str(self):
+        """Test the string representation of the state."""
+        self.assertEqual(str(self.state), f"State({self.state.id}, Test State, Test Country)")
+
     def test_empty_name(self):
         """Test that an empty name raises a ValueError."""
         with self.assertRaises(ValueError):
