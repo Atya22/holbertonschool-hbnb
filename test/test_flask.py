@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 import unittest
 import json
-from api.api_user import app, data_manager
+from api.api_user import data_manager
+from app import app
 from model.users import User
 import uuid
 

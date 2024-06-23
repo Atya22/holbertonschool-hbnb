@@ -3,7 +3,8 @@
 
 import unittest
 import json
-from api.api_country_city import app, data_manager
+from api.api_country_city import data_manager
+from app import app
 from model.city import City
 
 class FlaskTestCase(unittest.TestCase):
