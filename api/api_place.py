@@ -18,6 +18,7 @@ def find_city(city_id):
     return None
 
 # Function to find updates for your ID
+def find_amenities(amenity_ids):
     amenities = []
     for amenity_id in amenity_ids:
         amenity_data = data_manager.get(amenity_id, 'Amenities')
