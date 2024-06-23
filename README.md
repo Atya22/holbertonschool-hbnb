@@ -109,3 +109,6 @@ Unit tests for the command interpreter are located in the [tests](./tests/) dire
 ```
 python3 -m unittest discover tests
 ```
+
+## Authors :black_nib:
+* **Fidan Huseynova** <[fidanhuseynova04](https://github.com/fidanhuseynova04)>
