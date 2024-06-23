@@ -36,3 +36,20 @@ class TestReview(unittest.TestCase):
         self.assertEqual(self.review.rating, 4)
         self.assertNotEqual(self.review.update_time, previous_update_time)
 
+    def test_review_str(self):
+        """Test the string representation of the review."""
+        expected_str = f"Review({self.review.id}, Test User, Test Place, 5)"
+        self.assertEqual(str(self.review), expected_str)
+
+    def test_invalid_rating(self):
+        """Test that a rating must be within an acceptable range."""
+        with self.assertRaises(ValueError):
+            Review(user="Test User", place="Test Place", text="Nice!", rating=6)
+
+    def test_delete_review(self):
+        """Test deleting the review."""
+        self.review.delete()
+        self.assertTrue(self.review.deleted)
+
+if __name__ == "__main__":
+    unittest.main()
