@@ -29,7 +29,12 @@ class TestCountry(unittest.TestCase):
         self.country.remove_state("State1")
         self.assertNotIn("State1", self.country.states)
     
-     def test_str_representation(self):
+    def test_remove_nonexistent_state(self):
+        initial_states = self.country.states.copy()
+        self.country.remove_state("State1")
+        self.assertEqual(self.country.states, initial_states)
+
+    def test_str_representation(self):
         self.country.add_state("State1")
         self.country.add_state("State2")
         expected_str = f"Country(ID: {self.country.id}, Name: Testland, States: [State1, State2])"
