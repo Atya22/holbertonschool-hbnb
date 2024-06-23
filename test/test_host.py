@@ -38,3 +38,6 @@ class TestHost(unittest.TestCase):
         self.host.add_amenities("Pool")
         self.host.remove_amenities("Pool")
         self.assertNotIn("Pool", self.host.amenities)
+
+if __name__ == "__main__":
+    unittest.main()
