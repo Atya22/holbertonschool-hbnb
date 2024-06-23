@@ -59,5 +59,5 @@ class TestState(unittest.TestCase):
         with self.assertRaises(ValueError):
             State(name="Test State", country="")
 
-    if __name__ == "__main__":
-        unittest.main()
+if __name__ == "__main__":
+    unittest.main()
