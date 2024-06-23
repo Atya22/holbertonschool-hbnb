@@ -30,6 +30,16 @@ class TestCity(unittest.TestCase):
         self.assertIn("Brooklyn", self.city.place)
         self.assertNotEqual(self.city.update_time, initial_update_time)
 
+    def test_remove_place(self):
+        self.city.add_place("Brooklyn")
+        self.city.remove_place("Manhattan")
+        self.assertNotIn("Manhattan", self.city.place)
+        self.assertIn("Brooklyn", self.city.place)
+        
+        # Test removing a place that does not exist
+        self.city.remove_place("Queens")
+        self.assertNotIn("Queens", self.city.place)
+
     def test_str_method(self):
         str_output = str(self.city)
         self.assertIn("City: New York", str_output)
