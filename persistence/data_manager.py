@@ -1,7 +1,7 @@
 #!usr/bin/python3
 from persistence.persistence_manager import IPersistenceManager
-import json
-import os
+from persistence.database import db
+
 
 class DataManager(IPersistenceManager):
     """
