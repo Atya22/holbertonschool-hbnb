@@ -12,27 +12,23 @@ data_manager = DataManager()
 
 # Function to meet a city by your ID
 def find_city(city_id):
-    city_data = data_manager.get(city_id, 'City')
-    if city_data:
-        return City(city_data['name'], city_data['population'], city_data['country_code'])
-    return None
+    return data_manager.get(City, city_id)
 
-# Function to find updates for your ID
+# Function to find updates for your IDs
 def find_amenities(amenity_ids):
-    amenities = []
-    for amenity_id in amenity_ids:
-        amenity_data = data_manager.get(amenity_id, 'Amenities')
-        if amenity_data:
-            amenities.append(Amenities(name=amenity_data['name']))
-    return amenities
+    return data_manager.query_all_by_filter(Amenities, Amenities.id.in_(amenity_ids))
 
 # Function to validate coordinates
 def validate_coordinates(latitude, longitude):
+    if latitude is None or longitude is None:
+        abort(400, description="Latitude and longitude are required")
     if not (-90 <= latitude <= 90 and -180 <= longitude <= 180):
         abort(400, description="Invalid geographical coordinates")
 
 # Function to validate that a value is a non-negative entry
 def validate_non_negative_integer(value, field_name):
+    if value is None:
+        abort(400, description=f"{field_name} is required")
     if not isinstance(value, int) or value < 0:
         abort(400, description=f"{field_name} must be a non-negative integer")
 
