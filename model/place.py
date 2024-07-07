@@ -1,11 +1,26 @@
 #!usr/bin/python3
 """ Class Place with the necessary attributes and methods."""
-
 from datetime import datetime
+from sqlalchemy import Column, String, Float, Integer
 from model.base import Base
 
 
 class Place(Base):
+    __tablename__ = 'places'
+
+    name = Column(String(50), nullable=False)
+    description = Column(String(250))
+    address = Column(String(250))
+    city = Column(String(50))
+    latitude = Column(Float)
+    longitude = Column(Float)
+    host_id = Column(String(36), nullable=False)
+    number_of_rooms = Column(Integer, nullable=False)
+    number_of_bathrooms = Column(Integer, nullable=False)
+    price_per_night = Column(Float, nullable=False)
+    max_guests = Column(Integer, nullable=False)
+
+
     def __init__(self, name, description, address,
                  city, latitude, longitude, host_id,
                  number_of_rooms, number_of_bathrooms,
