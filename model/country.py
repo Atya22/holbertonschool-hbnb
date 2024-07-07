@@ -1,9 +1,13 @@
 from model.base import Base
+from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship
+
 
 class Country(Base):
     """
     A class representing a country.
     """
+    
     def __init__(self, name, states=None):
         super().__init__()
         self.name = name
