@@ -28,7 +28,7 @@ class TestCountry(unittest.TestCase):
         self.country.add_state("State1")
         self.country.remove_state("State1")
         self.assertNotIn("State1", self.country.states)
-    
+
     def test_remove_nonexistent_state(self):
         initial_states = self.country.states.copy()
         self.country.remove_state("State1")
@@ -43,5 +43,6 @@ class TestCountry(unittest.TestCase):
         self.country.add_state("State2")
         expected_str = f"Country(ID: {self.country.id}, Name: Testland, States: [State1, State2])"
         self.assertEqual(str(self.country), expected_str)
+
 if __name__ == '__main__':
     unittest.main()
