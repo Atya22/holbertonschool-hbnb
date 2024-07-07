@@ -84,31 +84,26 @@ def create_place():
 
     return jsonify(new_place.to_dict()), 201
 
-@api_place.route('/places', methods=['GET'])
+@api_.route('/places', methods=['GET'])
 def get_places():
-    places = list(data_manager.storage.get('Place', {}).values())
+    places = data_manager.query_all(Place)
     return jsonify(places), 200
 
-# Route to get a place by your ID
-@api_place.route('/places/<place_id>', methods=['GET'])
+@api.route('/places/<place_id>', methods=['GET'])
 def get_place(place_id):
     place_data = data_manager.get(place_id, 'Place')
-    if not place_data:
+    if not place:
         abort(404, description="Place not found")
 
-    place = Place(**place_data)
-    detailed_place = add_detailed_info(place.to_dict())
     return jsonify(detailed_place), 200
 
-@api_place.route('/places/<place_id>', methods=['PUT'])
+@api.route('/places/<place_id>', methods=['PUT'])
 def update_place(place_id):
-    data = request.json
-    place_data = data_manager.get(place_id, 'Place')
-    if not place_data:
+    place = data_manager.get(place_id, 'Place')
+    if not place:
         abort(404, description="Place not found")
 
-    place = Place(**place_data)
-    # Validation of entry data
+    data = request.get_json()
     if 'latitude' in data or 'longitude' in data:
         validate_coordinates(data.get('latitude', place.latitude), data.get('longitude', place.longitude))
     if 'number_of_rooms' in data:
@@ -127,31 +122,28 @@ def update_place(place_id):
     place.name = data.get('name', place.name)
     place.description = data.get('description', place.description)
     place.address = data.get('address', place.address)
-    place.city = find_city(data.get('city_id')) if data.get('city_id') else place.city
+    place.city_id = data.get('city_id', place.city_id)
     place.latitude = data.get('latitude', place.latitude)
     place.longitude = data.get('longitude', place.longitude)
+    place.host_id = data.get('host_id', place.host_id)
     place.number_of_rooms = data.get('number_of_rooms', place.number_of_rooms)
     place.number_of_bathrooms = data.get('number_of_bathrooms', place.number_of_bathrooms)
     place.price_per_night = data.get('price_per_night', place.price_per_night)
     place.max_guests = data.get('max_guests', place.max_guests)
-    place.amenities = find_amenities(data.get('amenity_ids', [])) if 'amenity_ids' in data else place.amenities
+    place.amenities = find_amenities(data.get('amenity_ids', []))
 
     data_manager.update(place)
-
     return jsonify(place.to_dict()), 200
 
-@api_place.route('/places/<place_id>', methods=['DELETE'])
+@app.route('/places/<place_id>', methods=['DELETE'])
 def delete_place(place_id):
-    place_data = data_manager.get(place_id, 'Place')
-    if not place_data:
+    place = data_manager.get(Place, place_id)
+    if not place:
         abort(404, description="Place not found")
 
-    data_manager.delete(place_id, 'Place')
+    data_manager.delete(place)
 
-    return jsonify({"message": "Place deleted successfully"}), 204
+    return '', 204
 
-def add_detailed_info(place):
-    place["city"] = data_manager.get(place["city"]["id"], "City").to_dict() if place.get("city") else None
-    place["amenities"] = [data_manager.get(amenity["id"], "Amenities").to_dict() for amenity in place.get("amenities", [])]
-    place["host"] = data_manager.get(place["host_id"], "User").to_dict() if place.get("host_id") else None
-    return place
+if __name__ == '__main__':
+    app.run(debug=True)
