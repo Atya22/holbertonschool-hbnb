@@ -1,8 +1,11 @@
 #!/usr/bin/python3
 from flask import Blueprint, jsonify, request, abort
 from model.review import Review
+from model.place import Place
+from model.users import User
 from persistence.data_manager import DataManager
-import uuid
+from persistence.database import db
+from datetime import datetime
 
 api_review = Blueprint('api_review', __name__)
 data_manager = DataManager()
