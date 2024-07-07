@@ -3,11 +3,11 @@ from flask import Blueprint, jsonify, request, abort
 from model.place import Place
 from model.city import City
 from model.amenities import Amenities
-from model.users import User  # Asegúrate de tener la clase User importada
+from model.users import User
 from persistence.data_manager import DataManager
-from datetime import datetime
+from persistence.database import db
 
-api_place = Blueprint('api_place', __name__)
+app = Flask(__name__)
 data_manager = DataManager()
 
 # Function to meet a city by your ID
