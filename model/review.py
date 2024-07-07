@@ -1,11 +1,22 @@
 #!usr/bin/python3
 """ Class Review with the necessary attributes and methods."""
-
 from datetime import datetime
 from model.base import Base
+from sqlalchemy import Column, String, Integer, ForeignKey
+from sqlalchemy.orm import relationship
 
 
 class Review(Base):
+    __tablename__ = 'reviews'
+
+    id = Column(String(36), primary_key=True)
+    user_id = Column(String(36), ForeignKey('users.id'), nullable=False)
+    place_id = Column(String(36), ForeignKey('places.id'), nullable=False)
+    rating = Column(Integer, nullable=False)
+    comment = Column(String(500))
+    deleted = Column(String(10), nullable=False, default='False')
+
+
     def __init__(self, user, place, text, rating):
         super().__init__()
         self.user = user
