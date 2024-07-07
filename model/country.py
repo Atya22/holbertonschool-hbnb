@@ -7,7 +7,12 @@ class Country(Base):
     """
     A class representing a country.
     """
-    
+    __tablename__ = 'countries'
+
+    id = Column(String(36), primary_key=True)
+    name = Column(String(100), nullable=False)
+    states = relationship('State', back_populates='country')
+
     def __init__(self, name, states=None):
         super().__init__()
         self.name = name
