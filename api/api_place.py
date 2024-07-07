@@ -34,19 +34,22 @@ def validate_non_negative_integer(value, field_name):
 
 # Function to validate the price
 def validate_price(price):
+    if price is None:
+        abort(400, description="Price per night is required")
     if not isinstance(price, (int, float)) or price < 0:
         abort(400, description="Price per night must be a valid non-negative numerical value")
 
 def validate_city_id(city_id):
-    if not find_city(city_id):
+    if not city_id or not find_city(city_id):
         abort(400, description="Invalid city_id, city does not exist")
 
 def validate_amenity_ids(amenity_ids):
-    for amenity_id in amenity_ids:
-        if not data_manager.get(amenity_id, 'Amenities'):
-            abort(400, description=f"Invalid amenity_id {amenity_id}, amenity does not exist")
-
-@api_place.route('/places', methods=['POST'])
+    if not isinstance(amenity_ids, list):
+        abort(400, description="Amenity_ids must be a list")
+    if not data_manager.query_all_by_filter(Amenities, Amenities.id.in_(amenity_ids)).count() == len(amenity_ids):
+        abort(400, description="One or more amenity_ids are invalid")
+        
+@api.route('/places', methods=['POST'])
 def create_place():
     data = request.get_json()
     if not data:
@@ -72,13 +75,15 @@ def create_place():
         number_of_rooms=data.get('number_of_rooms'),
         number_of_bathrooms=data.get('number_of_bathrooms'),
         price_per_night=data.get('price_per_night'),
-        max_guests=data.get('max_guests'),
-        amenities=find_amenities(data.get('amenity_ids', []))
+        max_guests=data.get('max_guests')
     )
+
+    new_place.amenities = find_amenities(data.get('amenity_ids', []))
 
     data_manager.save(new_place)
 
     return jsonify(new_place.to_dict()), 201
+
 @api_place.route('/places', methods=['GET'])
 def get_places():
     places = list(data_manager.storage.get('Place', {}).values())
